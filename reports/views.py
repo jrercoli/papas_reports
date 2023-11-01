@@ -18,7 +18,7 @@ def get_order_totals(request):
         annotate(total=Sum(F('product__cost') * F('quantity')))
     # build required output (order.id, order total)
     for i in result:
-        writer.writerow([i['order_id'], str(i['total'])])
+        writer.writerow([i['order_id'], str(round(i['total'], 2))])
     return response
 
 
@@ -55,4 +55,17 @@ def get_customer_rank(request):
 
     writer = csv.writer(response)
     writer.writerow(['id', 'name', 'lastname', 'total'])
+
+    # get ranking of total purchases per customer
+    result = OrderItem.objects.values('order__customer__id',
+                                      'order__customer__first_name',
+                                      'order__customer__last_name').\
+        order_by('order__customer__id').\
+        annotate(total=Sum(F('product__cost') * F('quantity')))
+    customer_rank = sorted(result, key=lambda x: x['total'], reverse=True)
+    # build required output (customer.id, customer.first_name, customer.last_name, total purchases)
+    for i in customer_rank:
+        writer.writerow([i['order__customer__id'], i['order__customer__first_name'],
+                         i['order__customer__last_name'], str(round(i['total'], 2))])
+
     return response
