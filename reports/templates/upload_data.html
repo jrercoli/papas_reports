@@ -1,0 +1,22 @@
+<html lang="en">
+    <body>
+        {% if messages %}
+            {% for message in messages %}
+                <li> {{ message }}</li>
+            {% endfor %}
+        {% endif %}
+        <br/>
+        <form
+            action="/upload_data/"
+            enctype="multipart/form-data"
+            method="post"
+        >
+            {% csrf_token %}
+            {{ form }}
+            <br/>
+            <br/>
+            <input type="submit" value="Submit">
+        </form>
+        <h3> </h3>
+    </body>
+</html>

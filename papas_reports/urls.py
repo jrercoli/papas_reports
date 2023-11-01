@@ -16,8 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from reports import urls as api_reports_urls
+from reports.views import UploadDataView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include(api_reports_urls)),
+    path('upload_data/', UploadDataView.as_view()),
 ]
