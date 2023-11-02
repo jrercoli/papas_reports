@@ -56,8 +56,10 @@ def get_order_totals(request):
     # get list of orders with their total
     result = OrderItem.objects.values('order_id').order_by('order_id').\
         annotate(total=Sum(F('product__cost') * F('quantity')))
+    # sort by order_id
+    sort_result = sorted(result, key=lambda x: (int(x['order_id'])))
     # build required output (order.id, order total)
-    for i in result:
+    for i in sort_result:
         fwriter.writerow([i['order_id'], str(round(i['total'], 2))])
     return response
 
@@ -74,10 +76,19 @@ def get_clients_by_product(request):
     # get list of customers who buy a product (product.id, customer.id)
     result = OrderItem.objects.values("product_id", "order__customer__id").\
         order_by("product_id", "order__customer__id")
+    # sort by product_id
+    sort_result = sorted(result, key=lambda x: (int(x['product_id'])))
+    # build a unique list of customers for each product
+    unique_result, set_prod_cli = [], set()
+    for d in sort_result:
+        key = d['product_id'] + d['order__customer__id']
+        if key not in set_prod_cli:
+            set_prod_cli.add(key)
+            unique_result.append(d)
     # build required output (product.id, list of customer.id)
     prod = '0'
     cust_list = ''
-    for i in result:
+    for i in unique_result:
         if i['product_id'] != prod:
             fwriter.writerow([prod, cust_list])
             prod = i['product_id']
