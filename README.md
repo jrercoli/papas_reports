@@ -7,9 +7,10 @@ Builded with Python 3, Django 3.2
 The app must allow you to upload 3 external data files (customers, products and orders) to then build certain reports with information necessary for different areas of the company.
 
 The reports are:
-a) order report with its total
-b) report of customers who have purchased each product
-c) total ranking in euros purchased by customers
+- order report with its total
+- report of customers who have purchased each product
+- total ranking in euros purchased by customers
+
 All these reports must be requested through API calls.
 
 ## How to install

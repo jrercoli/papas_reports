@@ -30,17 +30,14 @@ class UploadDataView(View):
             import_customers(customers_rows)
         except Exception as e:
             messages.error(request, str(e))
-
         try:
             import_products(products_rows)
         except Exception as e:
             messages.error(request, str(e))
-
         try:
             import_orders(orders_rows)
         except Exception as e:
             messages.error(request, str(e))
-
         return render(request, "upload_data.html", {"form": UploadDataForm()})
 
 

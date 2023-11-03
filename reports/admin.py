@@ -6,7 +6,11 @@ class CustomerAdmin(admin.ModelAdmin):
     list_display = ('last_name', 'first_name')
 
 
-admin.site.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+
+admin.site.register(Product, ProductAdmin)
 admin.site.register(Customer, CustomerAdmin)
 admin.site.register(Order)
 admin.site.register(OrderItem)

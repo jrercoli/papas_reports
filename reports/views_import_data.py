@@ -3,6 +3,11 @@ from .models import Customer, Product, Order, OrderItem
 
 
 def import_customers(data):
+    # check data header
+    header = next(data)
+    if header != 'id,firstname,lastname\r\n':
+        raise Exception('Unexpected Customer data header, should be "id, firstname, lastname"')
+    data.seek(0)
     # delete previous data in model
     Customer.objects.all().delete()
     # convert csv data to dict, iterate Customers and create new model obj
@@ -17,6 +22,11 @@ def import_customers(data):
 
 
 def import_products(data):
+    # check data header
+    header = next(data)
+    if header != 'id,name,cost\r\n':
+        raise Exception('Unexpected Product data header, should be "id,name,cost"')
+    data.seek(0)
     # delete previous data in model
     Product.objects.all().delete()
     # convert csv data to dict, iterate Products and create new model obj
@@ -30,6 +40,11 @@ def import_products(data):
 
 
 def import_orders(data):
+    # check data header
+    header = next(data)
+    if header != 'id,customer,products\r\n':
+        raise Exception('Unexpected Order data header, should be "id,customer,products"')
+    data.seek(0)
     # delete previous data in model
     Order.objects.all().delete()
     # convert csv data to dict, iterate Orders and create new model obj
