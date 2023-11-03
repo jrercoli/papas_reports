@@ -17,7 +17,16 @@ All these reports must be requested through API calls.
 
 
 ## On test coverage
+There are some API tests in reports/tests.py.
 
+These tests prove :
+- that the urls for upload data to import and download reports, can be called correctly by returning a HTTP 200 (ApiStatusOkTest class)
+- that the download reports API calls returns the specified data structure (ApiDownloadDataTest class)
+- that the import processes of the uploaded external data, correctly create the specified models of the application (ApiImportDataTest class)
+
+```bash
+./manage.py test --verbosity 2
+```
 
 ## Steps and bibliography used for development
 
