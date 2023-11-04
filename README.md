@@ -24,13 +24,13 @@ Second, you will be ready to run the dockerized app, this allow to start the Dja
 ```bash
 docker run -it -p 8000:8000 papas-reports-app
 ```
-Then you could test the app:
+Then you could use the app:
 - To upload csv data type http://localhost:8000/upload_data/ in your browser. The csv data are in the project's ext_data folder.
 - To download the csv output reports type :
     * http://localhost:8000/api/v1/reports/order_totals/ to obtain Orders report.
     * http://localhost:8000/api/v1/reports/customers_product/ to obtain Customer who buys each Product report.
     * http://localhost:8000/api/v1/reports/customer_rank/ to obtain Customer buy ranking report.
-- To watch the app business models and objects you could run the Django Admin built-in app, to login you must use a previously user createad for this test purpose (user=admin, passw=admin1234)  
+- To watch the app business models and objects you could run the Django Admin built-in app, to login you must use a previously user created for this test purpose (user=admin, passw=admin1234)  
 http://localhost:8000/admin
 
 ## On test coverage
@@ -71,5 +71,11 @@ This implementation, to be production ready, requires at least the following:
 Also we need to define some useful environment variables (Postgres DB, USER, PASSW, etc), for which an env_template file must be defined and stored in the repo with the constants to use, then in PROD they are stored in a secure env file which will be accessed from the app with the [python-dotenv](https://pypi.org/project/python-dotenv/) library
 * Remove secrets from `settings.py` and put them in safe storage, such as AWS Secrets Manager.
 * Debug mode is on, it must be set to False in the PROD environment.
-* It needs a CD pipeline to deploy to different environments, such as staging and production.
+* It needs a CD pipeline to deploy to different environments, such as staging and production.  
+
+One last Tip about manage a big data volume:  
+
+If the volume of data to be imported was significant, we could use [Celery](https://docs.celeryq.dev/en/stable/getting-started/introduction.html) to run each of the 3 importers in the background asynchronously.  
+In this case we can execute the Product and Customer importers in parallel (using task groups) and when both finish, execute sequentially (using task then) the order importer because it is dependent on the previous ones.  
+To use Celery we also need include a message transport broker like Redis or RabbitMQ to send and receive messages.
 
