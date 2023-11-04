@@ -42,7 +42,7 @@ These tests prove :
 - that the import processes of the uploaded external data, correctly create the specified models of the application (ApiImportDataTest class)
 
 ```bash
-./manage.py test --verbosity 2
+python3 manage.py test --verbosity 2
 ```
 
 ## Steps and bibliography used for development
