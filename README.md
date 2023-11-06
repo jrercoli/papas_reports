@@ -67,13 +67,13 @@ Bibliography:
 This implementation, to be production ready, requires at least the following:
 
 * Authentication and Authorization, this API does not implement any right now. It could be helpful to use JWT tokens as a first solution.
-* Database storage, this app is using Sqlite to have a simply way to manage test data, but we need a more robust DB engine like PostgreSQL in production. It could be use a Docker service who runs it and expose port to interact with the dockerized app (we'll need to use docker-compose to define the services).  
-Also we need to define some useful environment variables (Postgres DB, USER, PASSW, etc), for which an env_template file must be defined and stored in the repo with the constants to use, then in PROD they are stored in a secure env file which will be accessed from the app with the [python-dotenv](https://pypi.org/project/python-dotenv/) library
-* Remove secrets from `settings.py` and put them in safe storage, such as AWS Secrets Manager.
+* Database storage, this app is using Sqlite to have a simply way to manage test data, but we need a more robust DB engine like PostgreSQL in production. It could be use a Docker service who runs it and expose port to interact with the dockerized app (we'll need to use docker-compose to define the services). If we use a Cloud one would use a managed service such as AWS RDS for ex.  
+Also we need to define some useful environment variables (Postgres DB, USER, PASSW, etc), for which an env_template file must be defined and stored in the repo with the constants to use, then in PROD they are stored in a secure env file which will be accessed from the app with the [python-dotenv](https://pypi.org/project/python-dotenv/) library, also is a good practice in Clouds to use a secret manager such as AWS Secrets Manager for ex.
+* Remove secrets from `settings.py` and put them in a safe storage (in Clouds for ex.: AWS Secrets Manager)
 * Debug mode is on, it must be set to False in the PROD environment.
-* It needs a CD pipeline to deploy to different environments, such as staging and production.  
+* It needs a CI/CD pipeline to deploy to different environments, such as staging and production. It is also important to add to this pipeline a test runner that would run the full test suit of the project.
 
-One last Tip about manage a big data volume:  
+One last Tip, about manage a big data volume:  
 
 If the volume of data to be imported was significant, we could use [Celery](https://docs.celeryq.dev/en/stable/getting-started/introduction.html) to run each of the 3 importers in the background asynchronously.  
 In this case we can execute the Product and Customer importers in parallel (using task groups) and when both finish, execute sequentially (using task then) the order importer because it is dependent on the previous ones.  
