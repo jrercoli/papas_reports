@@ -1,6 +1,6 @@
 from csv import writer
 from io import TextIOWrapper
-
+import logging
 from django.http import HttpResponse
 from django.db.models import Sum, F
 from django.shortcuts import render
@@ -10,6 +10,11 @@ from django.contrib import messages
 from .models import OrderItem
 from .forms import UploadDataForm
 from .views_import_data import import_customers, import_products, import_orders
+
+
+logging.basicConfig(level=logging.INFO, filename='import_logger.log',
+                    format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger('reports.views')
 
 
 class UploadDataView(View):
@@ -27,16 +32,25 @@ class UploadDataView(View):
         orders_rows = TextIOWrapper(orders_file, encoding="utf-8", newline="")
         # import external data to models
         try:
+            logger.info('Call Customer import')
             import_customers(customers_rows)
+            logger.info('Succesfull Customer import')
         except Exception as e:
+            logger.error("Customer import: "+str(e))
             messages.error(request, str(e))
         try:
+            logger.info('Call Product import')
             import_products(products_rows)
+            logger.info('Succesfull Product import')
         except Exception as e:
+            logger.error("Product import: "+str(e))
             messages.error(request, str(e))
         try:
+            logger.info('Call Order import')
             import_orders(orders_rows)
+            logger.info('Succesfull Order import')
         except Exception as e:
+            logger.error("Order import: "+str(e))
             messages.error(request, str(e))
         return render(request, "upload_data.html", {"form": UploadDataForm()})
 
